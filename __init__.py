@@ -22,36 +22,30 @@ bl_info = {
 
 @persistent
 def load_library_on_file_load(scene=None):
-    pyclone = pc_utils.get_wm_props(bpy.context.window_manager)
-    # if toy_box_utils.ASSEMBLY_LIBRARY_NAME not in pyclone.libraries:
-    #     pyclone.add_library(name=toy_box_utils.ASSEMBLY_LIBRARY_NAME,
-    #                         activate_id='toy_box.activate',
-    #                         drop_id='toy_box.drop',
-    #                         icon='FILE_3D')
+    # pc_utils.register_library(name=toy_box_utils.ASSEMBLY_LIBRARY_NAME,
+    #                           activate_id='toy_box.activate',
+    #                           drop_id='toy_box.drop',
+    #                           icon='FILE_3D')
 
-    if toy_box_utils.OBJECT_LIBRARY_NAME not in pyclone.libraries:
-        pyclone.add_library(name=toy_box_utils.OBJECT_LIBRARY_NAME,
-                            activate_id='toy_box.activate',
-                            drop_id='toy_box.drop',
-                            icon='OBJECT_DATA')
+    pc_utils.register_library(name=toy_box_utils.OBJECT_LIBRARY_NAME,
+                              activate_id='toy_box.activate',
+                              drop_id='toy_box.drop',
+                              icon='OBJECT_DATA')
 
-    if toy_box_utils.COLLECTION_LIBRARY_NAME not in pyclone.libraries:
-        pyclone.add_library(name=toy_box_utils.COLLECTION_LIBRARY_NAME,
-                            activate_id='toy_box.activate',
-                            drop_id='toy_box.drop',
-                            icon='GROUP')
+    pc_utils.register_library(name=toy_box_utils.COLLECTION_LIBRARY_NAME,
+                              activate_id='toy_box.activate',
+                              drop_id='toy_box.drop',
+                              icon='GROUP')
 
-    if toy_box_utils.MATERIAL_LIBRARY_NAME not in pyclone.libraries:
-        pyclone.add_library(name=toy_box_utils.MATERIAL_LIBRARY_NAME,
-                            activate_id='toy_box.activate',
-                            drop_id='toy_box.drop',
-                            icon='MATERIAL')
+    pc_utils.register_library(name=toy_box_utils.MATERIAL_LIBRARY_NAME,
+                              activate_id='toy_box.activate',
+                              drop_id='toy_box.drop',
+                              icon='MATERIAL')
 
-    if toy_box_utils.WORLD_LIBRARY_NAME not in pyclone.libraries:
-        pyclone.add_library(name=toy_box_utils.WORLD_LIBRARY_NAME,
-                            activate_id='toy_box.activate',
-                            drop_id='toy_box.drop',
-                            icon='WORLD')                                                                                    
+    pc_utils.register_library(name=toy_box_utils.WORLD_LIBRARY_NAME,
+                              activate_id='toy_box.activate',
+                              drop_id='toy_box.drop',
+                              icon='WORLD')                                                                             
 
     toy_box_utils.update_props_from_xml_file()
 
@@ -63,7 +57,6 @@ def register():
     toy_box_props.register()
     toy_box_ui.register()
 
-    load_library_on_file_load()
     bpy.app.handlers.load_post.append(load_library_on_file_load)
 
 def unregister():
@@ -75,10 +68,8 @@ def unregister():
 
     bpy.app.handlers.load_post.remove(load_library_on_file_load)  
 
-    pyclone = pc_utils.get_wm_props(bpy.context.window_manager)
-    # pyclone.remove_library(toy_box_utils.ASSEMBLY_LIBRARY_NAME)
-    pyclone.remove_library(toy_box_utils.OBJECT_LIBRARY_NAME)
-    pyclone.remove_library(toy_box_utils.COLLECTION_LIBRARY_NAME)
-    pyclone.remove_library(toy_box_utils.MATERIAL_LIBRARY_NAME)
-    pyclone.remove_library(toy_box_utils.WORLD_LIBRARY_NAME)
+    pc_utils.unregister_library(toy_box_utils.OBJECT_LIBRARY_NAME)
+    pc_utils.unregister_library(toy_box_utils.COLLECTION_LIBRARY_NAME)
+    pc_utils.unregister_library(toy_box_utils.MATERIAL_LIBRARY_NAME)
+    pc_utils.unregister_library(toy_box_utils.WORLD_LIBRARY_NAME)
 
