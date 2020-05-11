@@ -6,6 +6,8 @@ from mathutils import Vector
 import math, random
 import bmesh
 import inspect
+# from .xml import XML
+# from .. import kitchen_utils
 
 def get_wm_props(window_manager):
     return window_manager.pyclone
@@ -332,21 +334,14 @@ def get_drivers(obj):
 
     return drivers        
 
-def update_file_browser_path(context,path):
-    for area in context.screen.areas:
-        if area.type == 'FILE_BROWSER':
-            for space in area.spaces:
-                if space.type == 'FILE_BROWSER':
-                    params = space.params
-                    params.directory = str.encode(path)
-                    if not context.screen.show_fullscreen:
-                        params.use_filter = True
-                        params.display_type = 'THUMBNAIL'
-                        params.use_filter_movie = False
-                        params.use_filter_script = False
-                        params.use_filter_sound = False
-                        params.use_filter_text = False
-                        params.use_filter_font = False
-                        params.use_filter_folder = False
-                        params.use_filter_blender = False
-                        params.use_filter_image = True    
+def register_library(name,active_id,drop_id,icon):
+    pyclone = get_wm_props(bpy.context.window_manager)
+    if name not in pyclone.libraries:
+        pyclone.add_library(name=name,
+                            activate_id=active_id,
+                            drop_id=drop_id,
+                            icon=icon)
+
+def unregister_library(name):
+    pyclone = get_wm_props(bpy.context.window_manager)
+    pyclone.remove_library(name)
