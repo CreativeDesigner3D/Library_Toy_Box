@@ -263,7 +263,7 @@ class toy_box_OT_drop_material_from_library(bpy.types.Operator):
         context.area.tag_redraw()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
-        selected_point, selected_obj = bp_utils.get_selection_point(context,event)
+        selected_point, selected_obj = pc_utils.get_selection_point(context,event)
         bpy.ops.object.select_all(action='DESELECT')
         if selected_obj:
             selected_obj.select_set(True)
