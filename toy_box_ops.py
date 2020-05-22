@@ -20,6 +20,7 @@ from .pc_lib import pc_utils
 class toy_box_OT_activate(Operator):
     bl_idname = "toy_box.activate"
     bl_label = "Activate Library"
+    bl_description = "This will active the toy box library"
     bl_options = {'UNDO'}
     
     library_name: StringProperty(name='Library Name')
@@ -41,6 +42,7 @@ class toy_box_OT_activate(Operator):
 
 class toy_box_OT_drop(Operator):
     bl_idname = "toy_box.drop"
+    bl_description = "Drop Asset from Toy Box Library"
     bl_label = "Drop File"
     bl_options = {'UNDO'}
     
@@ -70,6 +72,7 @@ class toy_box_OT_drop(Operator):
 class toy_box_OT_change_category(bpy.types.Operator):
     bl_idname = "toy_box.change_library_category"
     bl_label = "Change Library Category"
+    bl_description = "Change Library Category"
 
     category: bpy.props.StringProperty(subtype="DIR_PATH")
 
@@ -97,6 +100,7 @@ class toy_box_OT_change_category(bpy.types.Operator):
 class toy_box_OT_create_new_category(bpy.types.Operator):
     bl_idname = "toy_box.create_new_category"
     bl_label = "Create New Category"
+    bl_description = "This will create a new category"
     
     path: bpy.props.StringProperty(name="Path",description="Path to Add Folder to To")
     folder_name: bpy.props.StringProperty(name="Folder Name",description="Folder Name to Create")
@@ -125,7 +129,8 @@ class toy_box_OT_create_new_category(bpy.types.Operator):
 class toy_box_OT_open_browser_window(bpy.types.Operator):
     bl_idname = "toy_box.open_browser_window"
     bl_label = "Open Browser Window"
-    
+    bl_description = "This will open the active path in your OS file browser"
+
     path: bpy.props.StringProperty(name="Path",description="Path to Open")
 
     def execute(self, context):
@@ -142,6 +147,7 @@ class toy_box_OT_open_browser_window(bpy.types.Operator):
 class toy_box_OT_change_library_path(bpy.types.Operator):
     bl_idname = "toy_box.change_library_path"
     bl_label = "Change Library Path"
+    bl_description = "This will change the location to store the library assets"
     
     directory: bpy.props.StringProperty(subtype="DIR_PATH")
 
@@ -178,6 +184,7 @@ class toy_box_OT_change_library_path(bpy.types.Operator):
 class toy_box_OT_assign_material_dialog(bpy.types.Operator):
     bl_idname = "toy_box.assign_material_dialog"
     bl_label = "Assign Material Dialog"
+    bl_description = "This is a dialog to assign materials to material slots"
     bl_options = {'UNDO'}
     
     #READONLY
@@ -222,6 +229,7 @@ class toy_box_OT_assign_material_dialog(bpy.types.Operator):
 class toy_box_OT_assign_material_to_slot(bpy.types.Operator):
     bl_idname = "toy_box.assign_material_to_slot"
     bl_label = "Assign Material to Slot"
+    bl_description = "This will assign a material to a material slot"
     bl_options = {'UNDO'}
     
     #READONLY
@@ -240,6 +248,7 @@ class toy_box_OT_assign_material_to_slot(bpy.types.Operator):
 class toy_box_OT_replace_all_materials(bpy.types.Operator):
     bl_idname = "toy_box.replace_all_materials"
     bl_label = "Assign Material to Slot"
+    bl_description = "This will replace all materials in the file with a new material"
     bl_options = {'UNDO'}
     
     #READONLY

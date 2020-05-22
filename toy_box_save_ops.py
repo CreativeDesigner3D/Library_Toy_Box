@@ -20,6 +20,7 @@ from .pc_lib import pc_utils
 class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_object_to_asset_library"
     bl_label = "Save Object to Library"
+    bl_description = "This will save the selected object to the library"
     
     obj_name: bpy.props.StringProperty(name="Obj Name")
     obj = None
@@ -113,6 +114,8 @@ class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
+
+        bpy.ops.file.refresh()
         
         return {'FINISHED'}
 
@@ -120,6 +123,7 @@ class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
 class toy_box_OT_save_collection_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_collection_to_asset_library"
     bl_label = "Save Collection to Library"
+    bl_description = "This will save the selected collection to the library"
     
     collection_name: bpy.props.StringProperty(name="Collection Name")
     
@@ -222,12 +226,15 @@ class toy_box_OT_save_collection_to_asset_library(bpy.types.Operator):
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
         
+        bpy.ops.file.refresh()
+
         return {'FINISHED'}
 
 
 class toy_box_OT_save_material_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_material_to_asset_library"
     bl_label = "Save Material to Asset Library"
+    bl_description = "This will save the active material to the library"
     
     mat_name: bpy.props.StringProperty(name="Material Name")
         
@@ -343,12 +350,16 @@ class toy_box_OT_save_material_to_asset_library(bpy.types.Operator):
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
+
+        bpy.ops.file.refresh()
+
         return {'FINISHED'}
 
 
 class toy_box_OT_save_world_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_world_to_asset_library"
     bl_label = "Save World to Library"
+    bl_description = "This will save the active world to the library"
     
     world_name: bpy.props.StringProperty(name="World Name")
     
@@ -443,12 +454,15 @@ class toy_box_OT_save_world_to_asset_library(bpy.types.Operator):
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
         
+        bpy.ops.file.refresh()
+
         return {'FINISHED'}
 
 
 class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_assembly_to_asset_library"
     bl_label = "Save Assembly to Library"
+    bl_description = "This will save the active assembly to the library"
     
     assembly_bp_name: bpy.props.StringProperty(name="Collection Name")
     
@@ -550,6 +564,8 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
+        
+        bpy.ops.file.refresh()
         
         return {'FINISHED'}
 
