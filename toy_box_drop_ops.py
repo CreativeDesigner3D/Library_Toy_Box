@@ -335,7 +335,8 @@ class toy_box_OT_drop_world_from_library(bpy.types.Operator):
 class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_assembly_from_library"
     bl_label = "Drop Assembly From Library"
-    
+    bl_description = "This drops an assembly from the library"
+
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
     
     def execute(self, context):
