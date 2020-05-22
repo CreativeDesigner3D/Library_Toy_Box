@@ -33,7 +33,9 @@ class toy_box_OT_activate(Operator):
         folders = toy_box_utils.get_active_categories()
         active_folder_name = toy_box_utils.get_active_category(folders)
         if root_path and active_folder_name and os.path.exists(os.path.join(root_path,active_folder_name)):
-            pc_utils.update_file_browser_path(context,os.path.join(root_path,active_folder_name))        
+            pc_utils.update_file_browser_path(context,os.path.join(root_path,active_folder_name))      
+        else:
+            pc_utils.update_file_browser_path(context,root_path)
         return {'FINISHED'}
 
 
