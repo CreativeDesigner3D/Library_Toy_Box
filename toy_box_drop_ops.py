@@ -283,7 +283,7 @@ class toy_box_OT_drop_material_from_library(bpy.types.Operator):
                     bpy.ops.object.material_slot_add()
 
                 if len(selected_obj.material_slots) > 1:
-                    bpy.ops.library.assign_material_dialog('INVOKE_DEFAULT',material_name = self.mat.name, object_name = selected_obj.name)
+                    bpy.ops.toy_box.assign_material_dialog('INVOKE_DEFAULT',material_name = self.mat.name, object_name = selected_obj.name)
                     return self.finish(context)
                 else:
                     for slot in selected_obj.material_slots:
