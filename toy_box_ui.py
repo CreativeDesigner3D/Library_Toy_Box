@@ -37,12 +37,12 @@ class FILEBROWSER_PT_toy_box_library_headers(bpy.types.Panel):
 
         folders = toy_box_utils.get_active_categories()
 
+        row = col.row()
+
         if len(folders) == 0:
-            row = col.row()
             row.scale_y = 1.3            
             row.operator('toy_box.create_new_category',text="Create New Category",icon='ADD')
         else:
-            row = col.row()
             row.scale_y = 1.3
             row.menu('FILEBROWSER_MT_library_category_menu',text=toy_box_utils.get_active_category(folders),icon='FILEBROWSER')  
 
