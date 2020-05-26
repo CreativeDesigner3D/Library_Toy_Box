@@ -57,6 +57,7 @@ def register():
     toy_box_props.register()
     toy_box_ui.register()
 
+    load_library_on_file_load()
     bpy.app.handlers.load_post.append(load_library_on_file_load)
 
 def unregister():
