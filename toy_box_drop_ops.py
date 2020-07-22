@@ -1,4 +1,4 @@
-import bpy,os,inspect,codecs,subprocess
+import bpy,os,math,inspect,codecs,subprocess
 
 from bpy.types import (Header, 
                        Menu, 
@@ -62,7 +62,7 @@ class toy_box_OT_drop_object_from_library(bpy.types.Operator):
         with bpy.data.libraries.load(object_file_path, False, False) as (data_from, data_to):
                 data_to.objects = data_from.objects
         for obj in data_to.objects:
-            context.view_layer.active_layer_collection.collection.objects.link(obj)
+            context.view_layer.active_layer_collection.collection.objects.link(obj)         
             return obj
 
     def create_drawing_plane(self,context):
@@ -84,6 +84,10 @@ class toy_box_OT_drop_object_from_library(bpy.types.Operator):
                 self.obj.rotation_euler.z += .1
             else:
                 self.obj.rotation_euler.z -= .1
+        elif event.type == 'LEFT_ARROW' and event.value == 'PRESS':
+            self.obj.rotation_euler.z += math.radians(90)
+        elif event.type == 'RIGHT_ARROW' and event.value == 'PRESS':
+            self.obj.rotation_euler.z -= math.radians(90)                  
         else:
             self.position_object(selected_point,selected_obj)
 
