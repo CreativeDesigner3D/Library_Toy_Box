@@ -66,6 +66,7 @@ class LIBRARY_MT_library_commands(bpy.types.Menu):
             layout.operator('toy_box.save_assembly_to_asset_library',icon='BACK')
         if pyclone.active_library_name == toy_box_utils.OBJECT_LIBRARY_NAME:
             layout.operator('toy_box.save_object_to_asset_library',icon='BACK')
+            layout.operator('toy_box.search_directory_to_save_to_object_library',icon='NEWFOLDER') 
         if pyclone.active_library_name == toy_box_utils.COLLECTION_LIBRARY_NAME:
             layout.operator('toy_box.save_collection_to_asset_library',icon='BACK')
         if pyclone.active_library_name == toy_box_utils.MATERIAL_LIBRARY_NAME:

@@ -17,6 +17,57 @@ from bpy.props import (StringProperty,
 from . import toy_box_utils
 from .pc_lib import pc_utils
 
+
+def create_object_thumbnail_script(source_dir,source_file,object_name):
+    file = codecs.open(os.path.join(bpy.app.tempdir,"thumb_temp.py"),'w',encoding='utf-8')
+    file.write("import bpy\n")
+    file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
+    file.write("    for obj in data_from.objects:\n")
+    file.write("        if obj == '" + object_name + "':\n")
+    file.write("            data_to.objects = [obj]\n")
+    file.write("            break\n")
+    file.write("for obj in data_to.objects:\n")
+    file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
+    file.write("    obj.select_set(True)\n")
+    file.write("    if obj.type == 'CURVE':\n")
+    file.write("        bpy.context.scene.camera.rotation_euler = (0,0,0)\n")
+    file.write("        obj.data.dimensions = '2D'\n")
+    file.write("    bpy.context.view_layer.objects.active = obj\n")
+    file.write("    bpy.ops.view3d.camera_to_view_selected()\n")
+    file.write("    render = bpy.context.scene.render\n")
+    file.write("    render.use_file_extension = True\n")
+    file.write("    render.filepath = r'" + os.path.join(source_dir,object_name) + "'\n")
+    file.write("    bpy.ops.render.render(write_still=True)\n")
+    file.close()
+    
+    return os.path.join(bpy.app.tempdir,'thumb_temp.py')
+    
+def create_object_save_script(source_dir,source_file,object_name):
+    file = codecs.open(os.path.join(bpy.app.tempdir,"save_temp.py"),'w',encoding='utf-8')
+    file.write("import bpy\n")
+    file.write("import os\n")
+    file.write("for mat in bpy.data.materials:\n")
+    file.write("    bpy.data.materials.remove(mat,do_unlink=True)\n")
+    file.write("for obj in bpy.data.objects:\n")
+    file.write("    bpy.data.objects.remove(obj,do_unlink=True)\n")        
+    file.write("bpy.context.preferences.filepaths.save_version = 0\n")
+    file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
+    file.write("    for obj in data_from.objects:\n")
+    file.write("        if obj == '" + object_name + "':\n")
+    file.write("            data_to.objects = [obj]\n")
+    file.write("            break\n")
+    file.write("for obj in data_to.objects:\n")
+    file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
+    file.write("    obj.select_set(True)\n")
+    file.write("    if obj.type == 'CURVE':\n")
+    file.write("        bpy.context.scene.camera.rotation_euler = (0,0,0)\n")
+    file.write("        obj.data.dimensions = '2D'\n")
+    file.write("    bpy.context.view_layer.objects.active = obj\n")
+    file.write("bpy.ops.wm.save_as_mainfile(filepath=r'" + os.path.join(source_dir,object_name) + ".blend')\n")
+    file.close()
+    
+    return os.path.join(bpy.app.tempdir,'save_temp.py')   
+
 class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
     bl_idname = "toy_box.save_object_to_asset_library"
     bl_label = "Save Object to Library"
@@ -47,65 +98,15 @@ class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
         
         if self.obj_name + ".blend" in files or self.obj_name + ".png" in files:
             layout.label(text="File already exists",icon="ERROR")        
-        
-    def create_object_thumbnail_script(self,source_dir,source_file,object_name):
-        file = codecs.open(os.path.join(bpy.app.tempdir,"thumb_temp.py"),'w',encoding='utf-8')
-        file.write("import bpy\n")
-        file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
-        file.write("    for obj in data_from.objects:\n")
-        file.write("        if obj == '" + object_name + "':\n")
-        file.write("            data_to.objects = [obj]\n")
-        file.write("            break\n")
-        file.write("for obj in data_to.objects:\n")
-        file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
-        file.write("    obj.select_set(True)\n")
-        file.write("    if obj.type == 'CURVE':\n")
-        file.write("        bpy.context.scene.camera.rotation_euler = (0,0,0)\n")
-        file.write("        obj.data.dimensions = '2D'\n")
-        file.write("    bpy.context.view_layer.objects.active = obj\n")
-        file.write("    bpy.ops.view3d.camera_to_view_selected()\n")
-        file.write("    render = bpy.context.scene.render\n")
-        file.write("    render.use_file_extension = True\n")
-        file.write("    render.filepath = r'" + os.path.join(source_dir,object_name) + "'\n")
-        file.write("    bpy.ops.render.render(write_still=True)\n")
-        file.close()
-        
-        return os.path.join(bpy.app.tempdir,'thumb_temp.py')
-        
-    def create_object_save_script(self,source_dir,source_file,object_name):
-        file = codecs.open(os.path.join(bpy.app.tempdir,"save_temp.py"),'w',encoding='utf-8')
-        file.write("import bpy\n")
-        file.write("import os\n")
-        file.write("for mat in bpy.data.materials:\n")
-        file.write("    bpy.data.materials.remove(mat,do_unlink=True)\n")
-        file.write("for obj in bpy.data.objects:\n")
-        file.write("    bpy.data.objects.remove(obj,do_unlink=True)\n")        
-        file.write("bpy.context.preferences.filepaths.save_version = 0\n")
-        file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
-        file.write("    for obj in data_from.objects:\n")
-        file.write("        if obj == '" + object_name + "':\n")
-        file.write("            data_to.objects = [obj]\n")
-        file.write("            break\n")
-        file.write("for obj in data_to.objects:\n")
-        file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
-        file.write("    obj.select_set(True)\n")
-        file.write("    if obj.type == 'CURVE':\n")
-        file.write("        bpy.context.scene.camera.rotation_euler = (0,0,0)\n")
-        file.write("        obj.data.dimensions = '2D'\n")
-        file.write("    bpy.context.view_layer.objects.active = obj\n")
-        file.write("bpy.ops.wm.save_as_mainfile(filepath=r'" + os.path.join(source_dir,object_name) + ".blend')\n")
-        file.close()
-        
-        return os.path.join(bpy.app.tempdir,'save_temp.py')        
-        
+
     def execute(self, context):
         if bpy.data.filepath == "":
             bpy.ops.wm.save_as_mainfile(filepath=os.path.join(bpy.app.tempdir,"temp_blend.blend"))
         
         directory_to_save_to = toy_box_utils.get_filebrowser_path(context).decode("utf-8")
 
-        thumbnail_script_path = self.create_object_thumbnail_script(directory_to_save_to, bpy.data.filepath, self.obj_name)
-        save_script_path = self.create_object_save_script(directory_to_save_to, bpy.data.filepath, self.obj_name)
+        thumbnail_script_path = create_object_thumbnail_script(directory_to_save_to, bpy.data.filepath, self.obj_name)
+        save_script_path = create_object_save_script(directory_to_save_to, bpy.data.filepath, self.obj_name)
 
         # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
         
@@ -569,12 +570,101 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
         
         return {'FINISHED'}
 
+
+class Asset(bpy.types.PropertyGroup):
+    is_checked: bpy.props.BoolProperty(name="Is Checked",default=False)
+    path: bpy.props.StringProperty(name="Asset Path",subtype='DIR_PATH')
+
+
+class toy_box_OT_search_directory_to_save_to_object_library(bpy.types.Operator):
+    bl_idname = "toy_box.search_directory_to_save_to_object_library"
+    bl_label = "Save Objects"
+    bl_description = "This will allow users to select a directory to search all files to save objects to the active category."
+    
+    directory: bpy.props.StringProperty(name="Directory",subtype='DIR_PATH')
+    previous_directory: bpy.props.StringProperty(name="Previous Directory",subtype='DIR_PATH')
+
+    objects: bpy.props.CollectionProperty(type=Asset)
+    
+    @classmethod
+    def poll(cls, context):
+        return True
+
+    def check(self, context):
+        if self.directory != self.previous_directory:
+            self.get_objects_from_directory(context)
+        self.previous_directory = self.directory
+        return True
+
+    def invoke(self,context,event):
+        wm = context.window_manager
+        wm.fileselect_add(self)
+        return {'RUNNING_MODAL'}
+        
+    def get_objects_from_directory(self,context):
+        if not os.path.exists(self.directory):
+            return []
+
+        for obj in self.objects:
+            self.objects.remove(0)
+
+        files = os.listdir(self.directory)
+        for f in files:
+            filename, ext = os.path.splitext(f)
+            if ext == '.blend':
+                with bpy.data.libraries.load(os.path.join(self.directory,f), False, True) as (data_from, data_to):
+                    for obj in data_from.objects:
+                        o = self.objects.add()
+                        o.name = obj
+                        o.path = os.path.join(self.directory,f)
+                        o.is_checked = True
+
+    def check_for_duplicate_file(self,context,path):
+        if os.path.exists(path + ".blend"):
+            return True
+        if os.path.exists(path + ".png"):
+            return True
+        return False
+
+    def draw(self, context):
+        layout = self.layout
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text=str(len(self.objects)) + " Objects Found",icon='OBJECT_DATA')
+        for obj in self.objects:
+            row = col.row()
+            row.prop(obj,'is_checked',text=obj.name)     
+        
+    def execute(self, context):
+
+        directory_to_save_to = toy_box_utils.get_filebrowser_path(context).decode("utf-8")
+
+        for obj in self.objects:
+            if obj.is_checked:
+                thumbnail_script_path = create_object_thumbnail_script(directory_to_save_to, obj.path, obj.name)
+                save_script_path = create_object_save_script(directory_to_save_to, obj.path, obj.name)
+
+            # # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
+            
+                subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"')   
+                subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"')
+            
+                os.remove(thumbnail_script_path)
+                os.remove(save_script_path)
+
+        bpy.ops.file.refresh()
+        
+        return {'FINISHED'}
+
+
 classes = (
+    Asset,
     toy_box_OT_save_object_to_asset_library,
     toy_box_OT_save_collection_to_asset_library,
     toy_box_OT_save_material_to_asset_library,
     toy_box_OT_save_world_to_asset_library,
-    toy_box_OT_save_assembly_to_asset_library
+    toy_box_OT_save_assembly_to_asset_library,
+    toy_box_OT_search_directory_to_save_to_object_library,
 )
 
 register, unregister = bpy.utils.register_classes_factory(classes)
