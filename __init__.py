@@ -12,7 +12,7 @@ bl_info = {
     "name": "Toy Box Library",
     "author": "Andrew Peel",
     "version": (0, 2, 0),
-    "blender": (2, 90, 0),
+    "blender": (2, 91, 0),
     "location": "Asset Library",
     "description": "This is a library for Blenders standard types and assemblies",
     "warning": "",
