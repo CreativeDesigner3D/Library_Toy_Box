@@ -280,7 +280,7 @@ class toy_box_OT_drop_material_from_library(bpy.types.Operator):
                 if len(selected_obj.data.uv_layers) == 0:
                     bpy.ops.object.editmode_toggle()
                     bpy.ops.mesh.select_all(action='SELECT') 
-                    bpy.ops.uv.smart_project(angle_limit=66, island_margin=0, user_area_weight=0)  
+                    bpy.ops.uv.smart_project(angle_limit=66, island_margin=0, area_weight=0)  
                     bpy.ops.object.editmode_toggle()
 
                 if len(selected_obj.material_slots) == 0:
