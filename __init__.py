@@ -11,7 +11,7 @@ from bpy.app.handlers import persistent
 bl_info = {
     "name": "Toy Box Library",
     "author": "Andrew Peel",
-    "version": (0, 2, 0),
+    "version": (0, 2, 1),
     "blender": (2, 91, 0),
     "location": "Asset Library",
     "description": "This is a library for Blenders standard types and assemblies",
