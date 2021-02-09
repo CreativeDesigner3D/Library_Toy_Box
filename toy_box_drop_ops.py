@@ -355,8 +355,92 @@ class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
 
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
     
+    parent_obj_dict = {}
+    all_objects = []
+    drawing_plane = None
+    # obj = None
+    
     def execute(self, context):
-        #TODO:
+        self.parent_obj_dict = {}
+        self.all_objects = []
+        self.create_drawing_plane(context)
+        self.get_object(context)
+        context.window_manager.modal_handler_add(self)
+        context.area.tag_redraw()
+        return {'RUNNING_MODAL'}
+
+    def get_object(self,context):
+        path, ext = os.path.splitext(self.filepath)
+        object_file_path = os.path.join(path + ".blend")
+        with bpy.data.libraries.load(object_file_path, False, False) as (data_from, data_to):
+                data_to.objects = data_from.objects
+        for obj in data_to.objects:
+            self.all_objects.append(obj)
+            if obj.parent is None:
+                self.parent_obj_dict[obj] = (obj.location.x, obj.location.y, obj.location.z)            
+            context.view_layer.active_layer_collection.collection.objects.link(obj)         
+
+    def create_drawing_plane(self,context):
+        bpy.ops.mesh.primitive_plane_add()
+        plane = context.active_object
+        plane.location = (0,0,0)
+        self.drawing_plane = context.active_object
+        self.drawing_plane.display_type = 'WIRE'
+        self.drawing_plane.dimensions = (100,100,1)
+
+    def modal(self, context, event):
+        context.area.tag_redraw()
+        self.mouse_x = event.mouse_x
+        self.mouse_y = event.mouse_y
+        selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
+
+        if event.ctrl:
+            if event.mouse_y > event.mouse_prev_y:
+                self.obj.rotation_euler.z += .1
+            else:
+                self.obj.rotation_euler.z -= .1
+        elif event.type == 'LEFT_ARROW' and event.value == 'PRESS':
+            self.obj.rotation_euler.z += math.radians(90)
+        elif event.type == 'RIGHT_ARROW' and event.value == 'PRESS':
+            self.obj.rotation_euler.z -= math.radians(90)                  
+        else:
+            self.position_objects(selected_point)
+
+        if event_is_place_asset(event):
+            return self.finish(context)
+
+        if event_is_cancel_command(event):
+            return self.cancel_drop(context)
+        
+        if event_is_pass_through(event):
+            return {'PASS_THROUGH'}        
+        
+        return {'RUNNING_MODAL'}
+
+    def position_objects(self,selected_point):
+        for obj, location in self.parent_obj_dict.items():
+            obj.location = selected_point
+            obj.location.x += location[0]
+            obj.location.y += location[1]
+            obj.location.z += location[2]
+
+    def cancel_drop(self,context):
+        obj_list = []
+        obj_list.append(self.drawing_plane)
+        for obj in self.all_objects:
+            obj_list.append(obj)
+        pc_utils.delete_obj_list(obj_list)
+        return {'CANCELLED'}
+    
+    def finish(self,context):
+        context.window.cursor_set('DEFAULT')
+        if self.drawing_plane:
+            pc_utils.delete_obj_list([self.drawing_plane])
+        bpy.ops.object.select_all(action='DESELECT')
+        for obj, location in self.parent_obj_dict.items():
+            obj.select_set(True)  
+            context.view_layer.objects.active = obj            
+        context.area.tag_redraw()
         return {'FINISHED'}
 
 

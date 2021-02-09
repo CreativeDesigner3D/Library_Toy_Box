@@ -15,7 +15,7 @@ from bpy.props import (StringProperty,
                        EnumProperty,
                        CollectionProperty)
 from . import toy_box_utils
-from .pc_lib import pc_utils
+from .pc_lib import pc_utils, pc_types
 
 
 def create_object_thumbnail_script(source_dir,source_file,object_name):
@@ -466,21 +466,25 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
     bl_description = "This will save the active assembly to the library"
     
     assembly_bp_name: bpy.props.StringProperty(name="Collection Name")
-    
+
+    assembly = None
+    assembly_name = ""
+
     @classmethod
     def poll(cls, context):
-        return True #FIGURE OUT WHAT IS ACTIVE
-        # if context.scene.outliner.selected_collection_index + 1 <= len(bpy.data.collections):
-        #     return True
-        # else:
-        #     return False
+        assembly_bp = pc_utils.get_assembly_bp(context.object)
+        if assembly_bp:
+            return True
+        else:
+            return False
 
     def check(self, context):
         return True
 
     def invoke(self,context,event):
-        collection = context.view_layer.active_layer_collection.collection
-        self.collection_name = collection.name
+        assembly_bp = pc_utils.get_assembly_bp(context.object)
+        self.assembly = pc_types.Assembly(assembly_bp)
+        self.assembly_name = self.assembly.obj_bp.name
         wm = context.window_manager
         return wm.invoke_props_dialog(self, width=300)
 
@@ -490,64 +494,64 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
         path = toy_box_utils.get_filebrowser_path(context).decode("utf-8")
         files = os.listdir(path) if os.path.exists(path) else []
 
-        layout.label(text="Assembly Name: " + self.collection_name)
+        layout.label(text="Assembly Name: " + self.assembly_name)
 
-        if self.collection_name + ".blend" in files or self.collection_name + ".png" in files:
+        if self.assembly_name + ".blend" in files or self.assembly_name + ".png" in files:
             layout.label(text="File already exists",icon="ERROR")
 
-    def select_collection_objects(self,coll):
+    def select_assembly_objects(self,coll):
         for obj in coll.objects:
             obj.select_set(True)
         for child in coll.children:
             self.select_collection_objects(child)
 
-    def create_collection_thumbnail_script(self,source_dir,source_file,collection_name):
+    def create_assembly_thumbnail_script(self,source_dir,source_file,assembly_name,obj_list):
         file = codecs.open(os.path.join(bpy.app.tempdir,"thumb_temp.py"),'w',encoding='utf-8')
         file.write("import bpy\n")
-        file.write("def select_collection_objects(coll):\n")
-        file.write("    for obj in coll.objects:\n")
-        file.write("        obj.select_set(True)\n")
-        file.write("    for child in coll.children:\n")
-        file.write("        select_collection_objects(child)\n")
+        
         file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
-        file.write("    for collection in data_from.collections:\n")
-        file.write("        if collection == '" + collection_name + "':\n")
-        file.write("            data_to.collections = [collection]\n")
-        file.write("            break\n")
-        file.write("for collection in data_to.collections:\n")
-        file.write("    bpy.context.view_layer.active_layer_collection.collection.children.link(collection)\n")
-        file.write("    select_collection_objects(collection)\n")
-        # file.write("    for obj in collection.objects:\n")
-        # file.write("        bpy.context.scene.objects.link(obj)\n") #TODO: FIX
-        # file.write("        obj.select_set(True)\n")
-        # file.write("        bpy.context.scene.objects.active = obj\n")
-        file.write("    bpy.ops.view3d.camera_to_view_selected()\n")
-        file.write("    render = bpy.context.scene.render\n")
-        file.write("    render.use_file_extension = True\n")
-        file.write("    render.filepath = r'" + os.path.join(source_dir,collection_name) + "'\n")
-        file.write("    bpy.ops.render.render(write_still=True)\n")
+        file.write("    data_to.objects = " + str(obj_list) + "\n")    
+
+        file.write("for obj in data_to.objects:\n")
+        file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
+        file.write("    obj.select_set(True)\n")
+        
+        file.write("bpy.ops.view3d.camera_to_view_selected()\n")
+
+        file.write("render = bpy.context.scene.render\n")
+        file.write("render.use_file_extension = True\n")
+        file.write("render.filepath = r'" + os.path.join(source_dir,assembly_name) + "'\n")
+        file.write("bpy.ops.render.render(write_still=True)\n")
         file.close()
+
         return os.path.join(bpy.app.tempdir,'thumb_temp.py')
         
-    def create_collection_save_script(self,source_dir,source_file,collection_name):
+    def create_assembly_save_script(self,source_dir,source_file,assembly_name,obj_list):
         file = codecs.open(os.path.join(bpy.app.tempdir,"save_temp.py"),'w',encoding='utf-8')
         file.write("import bpy\n")
         file.write("import os\n")
+
         file.write("for mat in bpy.data.materials:\n")
         file.write("    bpy.data.materials.remove(mat,do_unlink=True)\n")
         file.write("for obj in bpy.data.objects:\n")
         file.write("    bpy.data.objects.remove(obj,do_unlink=True)\n")               
-        file.write("bpy.context.preferences.filepaths.save_version = 0\n") #TODO: FIX THIS
+        file.write("bpy.context.preferences.filepaths.save_version = 0\n")
+        
         file.write("with bpy.data.libraries.load(r'" + source_file + "', False, True) as (data_from, data_to):\n")
-        file.write("    for collection in data_from.collections:\n")
-        file.write("        if collection == '" + collection_name + "':\n")
-        file.write("            data_to.collections = [collection]\n")
-        file.write("            break\n")
-        file.write("for collection in data_to.collections:\n")
-        file.write("    bpy.context.view_layer.active_layer_collection.collection.children.link(collection)\n")
-        file.write("bpy.ops.wm.save_as_mainfile(filepath=r'" + os.path.join(source_dir,collection_name) + ".blend')\n")
+        file.write("    data_to.objects = " + str(obj_list) + "\n")        
+
+        file.write("for obj in data_to.objects:\n")
+        file.write("    bpy.context.view_layer.active_layer_collection.collection.objects.link(obj)\n")
+
+        file.write("bpy.ops.wm.save_as_mainfile(filepath=r'" + os.path.join(source_dir,assembly_name) + ".blend')\n")
         file.close()
         return os.path.join(bpy.app.tempdir,'save_temp.py')
+
+    def get_children_list(self,obj_bp,obj_list):
+        obj_list.append(obj_bp.name)
+        for obj in obj_bp.children:
+            self.get_children_list(obj,obj_list)
+        return obj_list
 
     def execute(self, context):
         if bpy.data.filepath == "":
@@ -555,8 +559,11 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
                     
         directory_to_save_to = toy_box_utils.get_filebrowser_path(context).decode("utf-8")
 
-        thumbnail_script_path = self.create_collection_thumbnail_script(directory_to_save_to, bpy.data.filepath, self.collection_name)
-        save_script_path = self.create_collection_save_script(directory_to_save_to, bpy.data.filepath, self.collection_name)
+        obj_list = []
+        obj_list = self.get_children_list(self.assembly.obj_bp,obj_list)
+
+        thumbnail_script_path = self.create_assembly_thumbnail_script(directory_to_save_to, bpy.data.filepath, self.assembly_name, obj_list)
+        save_script_path = self.create_assembly_save_script(directory_to_save_to, bpy.data.filepath, self.assembly_name, obj_list)
 
 #         subprocess.Popen(r'explorer ' + bpy.app.tempdir)
         

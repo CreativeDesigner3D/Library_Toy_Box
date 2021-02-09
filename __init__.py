@@ -22,10 +22,10 @@ bl_info = {
 
 @persistent
 def load_library_on_file_load(scene=None):
-    # pc_utils.register_library(name=toy_box_utils.ASSEMBLY_LIBRARY_NAME,
-    #                           activate_id='toy_box.activate',
-    #                           drop_id='toy_box.drop',
-    #                           icon='FILE_3D')
+    pc_utils.register_library(name=toy_box_utils.ASSEMBLY_LIBRARY_NAME,
+                              activate_id='toy_box.activate',
+                              drop_id='toy_box.drop',
+                              icon='FILE_3D')
 
     pc_utils.register_library(name=toy_box_utils.OBJECT_LIBRARY_NAME,
                               activate_id='toy_box.activate',
@@ -69,6 +69,7 @@ def unregister():
 
     bpy.app.handlers.load_post.remove(load_library_on_file_load)  
 
+    pc_utils.unregister_library(toy_box_utils.ASSEMBLY_LIBRARY_NAME)
     pc_utils.unregister_library(toy_box_utils.OBJECT_LIBRARY_NAME)
     pc_utils.unregister_library(toy_box_utils.COLLECTION_LIBRARY_NAME)
     pc_utils.unregister_library(toy_box_utils.MATERIAL_LIBRARY_NAME)
