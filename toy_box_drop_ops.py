@@ -206,7 +206,7 @@ class toy_box_OT_drop_collection_from_library(bpy.types.Operator):
             obj.location.z += location[2]
 
     def modal(self, context, event):
-        context.area.tag_redraw()
+        context.view_layer.update()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
         selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.collection_objects)
@@ -389,7 +389,7 @@ class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
         self.drawing_plane.dimensions = (100,100,1)
 
     def modal(self, context, event):
-        context.area.tag_redraw()
+        context.view_layer.update()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
         selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
