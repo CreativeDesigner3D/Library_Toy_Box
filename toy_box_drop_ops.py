@@ -83,7 +83,7 @@ class toy_box_OT_drop_object_from_library(bpy.types.Operator):
         context.area.tag_redraw()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
-        selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
+        selected_point, selected_obj, selected_normal = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
 
         if event.ctrl:
             if event.mouse_y > event.mouse_prev_y:
@@ -209,7 +209,7 @@ class toy_box_OT_drop_collection_from_library(bpy.types.Operator):
         context.view_layer.update()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
-        selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.collection_objects)
+        selected_point, selected_obj, selected_normal = pc_utils.get_selection_point(context,event,exclude_objects=self.collection_objects)
 
         self.position_collection(selected_point,selected_obj)
         
@@ -282,7 +282,7 @@ class toy_box_OT_drop_material_from_library(bpy.types.Operator):
         context.area.tag_redraw()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
-        selected_point, selected_obj = pc_utils.get_selection_point(context,event)
+        selected_point, selected_obj, selected_normal = pc_utils.get_selection_point(context,event)
         bpy.ops.object.select_all(action='DESELECT')
         if selected_obj:
             selected_obj.select_set(True)
@@ -392,7 +392,7 @@ class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
         context.view_layer.update()
         self.mouse_x = event.mouse_x
         self.mouse_y = event.mouse_y
-        selected_point, selected_obj = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
+        selected_point, selected_obj, selected_normal = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
 
         if event.ctrl:
             if event.mouse_y > event.mouse_prev_y:
