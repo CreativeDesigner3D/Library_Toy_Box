@@ -189,7 +189,7 @@ def update_props_from_xml_file():
         tree = ET.parse(get_library_path_file())
         root = tree.getroot()
         for elm in root.findall("LibraryPaths"):
-            items = elm.getchildren()
+            items = list(elm.iter())
             for item in items:
                 
                 if item.tag == 'Objects':
