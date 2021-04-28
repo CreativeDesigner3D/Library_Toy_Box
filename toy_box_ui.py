@@ -3,50 +3,6 @@ import os
 from .pc_lib import pc_utils
 from . import toy_box_utils
 
-LIBRARY_NAMES = {toy_box_utils.ASSEMBLY_LIBRARY_NAME,
-                 toy_box_utils.OBJECT_LIBRARY_NAME,
-                 toy_box_utils.COLLECTION_LIBRARY_NAME,
-                 toy_box_utils.MATERIAL_LIBRARY_NAME,
-                 toy_box_utils.WORLD_LIBRARY_NAME}
-
-class FILEBROWSER_PT_toy_box_library_headers(bpy.types.Panel):
-    bl_space_type = 'FILE_BROWSER'
-    bl_region_type = 'UI'
-    bl_label = "Library"
-    bl_category = "Attributes"
-    bl_options = {'HIDE_HEADER'}
-
-    @classmethod
-    def poll(cls, context):
-        #Only display when active and File Browser is not open as separate window
-        if len(context.area.spaces) > 1:
-            pyclone = pc_utils.get_scene_props(context.scene)
-            if pyclone.active_library_name in LIBRARY_NAMES:
-                return True   
-        return False
-
-    def draw(self, context):
-        layout = self.layout
-        col = layout.column()
-        pyclone = pc_utils.get_scene_props(context.scene)
-        row = col.row()
-        row.scale_y = 1.3       
-        row.label(text=pyclone.active_library_name,icon=toy_box_utils.get_active_library_icon()) 
-        row.separator()
-        row.menu('LIBRARY_MT_library_commands',text="",icon='SETTINGS') 
-
-        folders = toy_box_utils.get_active_categories()
-
-        row = col.row()
-
-        if len(folders) == 0:
-            row.scale_y = 1.3            
-            row.operator('toy_box.create_new_category',text="Create New Category",icon='ADD')
-        else:
-            row.scale_y = 1.3
-            row.menu('FILEBROWSER_MT_library_category_menu',text=toy_box_utils.get_active_category(folders),icon='FILEBROWSER')  
-
-
 class FILEBROWSER_MT_library_category_menu(bpy.types.Menu):
     bl_label = "Library"
 
@@ -79,7 +35,6 @@ class LIBRARY_MT_library_commands(bpy.types.Menu):
         layout.operator('toy_box.change_library_path',icon='FILE_FOLDER')
 
 classes = (
-    FILEBROWSER_PT_toy_box_library_headers,
     FILEBROWSER_MT_library_category_menu,
     LIBRARY_MT_library_commands,
 )

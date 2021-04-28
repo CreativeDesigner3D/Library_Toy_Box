@@ -25,26 +25,31 @@ def load_library_on_file_load(scene=None):
     pc_utils.register_library(name=toy_box_utils.ASSEMBLY_LIBRARY_NAME,
                               activate_id='toy_box.activate',
                               drop_id='toy_box.drop',
+                              namespace="toy_box_library",
                               icon='FILE_3D')
 
     pc_utils.register_library(name=toy_box_utils.OBJECT_LIBRARY_NAME,
                               activate_id='toy_box.activate',
                               drop_id='toy_box.drop',
+                              namespace="toy_box_library",
                               icon='OBJECT_DATA')
 
     pc_utils.register_library(name=toy_box_utils.COLLECTION_LIBRARY_NAME,
                               activate_id='toy_box.activate',
                               drop_id='toy_box.drop',
+                              namespace="toy_box_library",
                               icon='GROUP')
 
     pc_utils.register_library(name=toy_box_utils.MATERIAL_LIBRARY_NAME,
                               activate_id='toy_box.activate',
                               drop_id='toy_box.drop',
+                              namespace="toy_box_library",
                               icon='MATERIAL')
 
     pc_utils.register_library(name=toy_box_utils.WORLD_LIBRARY_NAME,
                               activate_id='toy_box.activate',
                               drop_id='toy_box.drop',
+                              namespace="toy_box_library",
                               icon='WORLD')                                                                             
 
     toy_box_utils.update_props_from_xml_file()

@@ -16,6 +16,7 @@ from bpy.props import (
         EnumProperty,
         )
 from . import toy_box_utils
+from .pc_lib import pc_utils
 
 def update_library_paths(self,context):
     toy_box_utils.write_xml_file()
@@ -71,6 +72,26 @@ class Toy_Box_Library_Scene_Props(PropertyGroup):
     active_material_category: StringProperty(name="Active Material Library",default="")
 
     active_world_category: StringProperty(name="Active World Library",default="")
+
+    def draw_filebrowser_header(self,layout,context):
+        col = layout.column()
+        pyclone = pc_utils.get_scene_props(context.scene)
+        row = col.row()
+        row.scale_y = 1.3       
+        row.label(text=pyclone.active_library_name,icon=toy_box_utils.get_active_library_icon()) 
+        row.separator()
+        row.menu('LIBRARY_MT_library_commands',text="",icon='SETTINGS') 
+
+        folders = toy_box_utils.get_active_categories()
+
+        row = col.row()
+
+        if len(folders) == 0:
+            row.scale_y = 1.3            
+            row.operator('toy_box.create_new_category',text="Create New Category",icon='ADD')
+        else:
+            row.scale_y = 1.3
+            row.menu('FILEBROWSER_MT_library_category_menu',text=toy_box_utils.get_active_category(folders),icon='FILEBROWSER') 
 
     @classmethod
     def register(cls):
