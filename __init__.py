@@ -66,17 +66,19 @@ def register():
     bpy.app.handlers.load_post.append(load_library_on_file_load)
 
 def unregister():
-    toy_box_ops.unregister()
-    toy_box_save_ops.unregister()
-    toy_box_drop_ops.unregister()
-    toy_box_props.unregister()
-    toy_box_ui.unregister()
+    try:
+        toy_box_ops.unregister()
+        toy_box_save_ops.unregister()
+        toy_box_drop_ops.unregister()
+        toy_box_props.unregister()
+        toy_box_ui.unregister()
 
-    bpy.app.handlers.load_post.remove(load_library_on_file_load)  
+        bpy.app.handlers.load_post.remove(load_library_on_file_load)  
 
-    pc_utils.unregister_library(toy_box_utils.ASSEMBLY_LIBRARY_NAME)
-    pc_utils.unregister_library(toy_box_utils.OBJECT_LIBRARY_NAME)
-    pc_utils.unregister_library(toy_box_utils.COLLECTION_LIBRARY_NAME)
-    pc_utils.unregister_library(toy_box_utils.MATERIAL_LIBRARY_NAME)
-    pc_utils.unregister_library(toy_box_utils.WORLD_LIBRARY_NAME)
-
+        pc_utils.unregister_library(toy_box_utils.ASSEMBLY_LIBRARY_NAME)
+        pc_utils.unregister_library(toy_box_utils.OBJECT_LIBRARY_NAME)
+        pc_utils.unregister_library(toy_box_utils.COLLECTION_LIBRARY_NAME)
+        pc_utils.unregister_library(toy_box_utils.MATERIAL_LIBRARY_NAME)
+        pc_utils.unregister_library(toy_box_utils.WORLD_LIBRARY_NAME)
+    except:
+        pass
