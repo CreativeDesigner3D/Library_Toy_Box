@@ -576,17 +576,21 @@ class Annotation(Assembly):
                 if child.type == 'FONT':
                     self.obj_text = child   
 
-    def create_annotation(self,layout_view):
-        collection = layout_view.dimension_collection
-
+    def create_annotation(self,layout_view=None):
         PATH = os.path.join(os.path.dirname(__file__),'assets',"Annotation_Arrow.blend")
 
         with bpy.data.libraries.load(PATH, False, False) as (data_from, data_to):
             data_to.objects = data_from.objects
 
+        if layout_view:
+            collection = layout_view.dimension_collection
+        else:
+            collection = bpy.context.view_layer.active_layer_collection.collection
+
         for obj in data_to.objects:
             if "obj_bp" in obj:
-                self.obj_bp = obj            
+                self.obj_bp = obj     
+                self.obj_bp['IS_ANNOTATION'] = True         
             if "obj_x" in obj:
                 self.obj_x = obj
             if "obj_y" in obj:
@@ -618,6 +622,11 @@ class Annotation(Assembly):
         row.label(text="Line Thickness:")
         row.prop(line_thickness,'distance_value',text="")   
 
+        row = layout.row()
+        row.label(text="Flip Text:")
+        row.prop(self.obj_text.pyclone,'flip_x',text="X")            
+        row.prop(self.obj_text.pyclone,'flip_y',text="Y")     
+        
 class Dimension(Assembly):
 
     obj_text = None
@@ -635,17 +644,20 @@ class Dimension(Assembly):
     def flip_y(self):
         self.obj_text.scale.y = -1
 
-    def create_dimension(self,layout_view):
+    def create_dimension(self,layout_view=None):
         PATH = os.path.join(os.path.dirname(__file__),'assets',"Dimension_Arrow.blend")
 
         with bpy.data.libraries.load(PATH, False, False) as (data_from, data_to):
             data_to.objects = data_from.objects
 
-        obj_bp = None
-        collection = layout_view.dimension_collection
+        if layout_view:
+            collection = layout_view.dimension_collection
+        else:
+            collection = bpy.context.view_layer.active_layer_collection.collection
         for obj in data_to.objects:
             if "obj_bp" in obj:
-                self.obj_bp = obj            
+                self.obj_bp = obj          
+                self.obj_bp['IS_DIMENSION'] = True  
             if "obj_x" in obj:
                 self.obj_x = obj
             if "obj_y" in obj:
