@@ -394,17 +394,19 @@ class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
         self.mouse_y = event.mouse_y
         selected_point, selected_obj, selected_normal = pc_utils.get_selection_point(context,event,exclude_objects=self.all_objects)
 
-        if event.ctrl:
-            if event.mouse_y > event.mouse_prev_y:
-                self.obj.rotation_euler.z += .1
-            else:
-                self.obj.rotation_euler.z -= .1
-        elif event.type == 'LEFT_ARROW' and event.value == 'PRESS':
-            self.obj.rotation_euler.z += math.radians(90)
-        elif event.type == 'RIGHT_ARROW' and event.value == 'PRESS':
-            self.obj.rotation_euler.z -= math.radians(90)                  
-        else:
-            self.position_objects(selected_point)
+        self.position_objects(selected_point)
+
+        # if event.ctrl:
+        #     if event.mouse_y > event.mouse_prev_y:
+        #         self.obj.rotation_euler.z += .1
+        #     else:
+        #         self.obj.rotation_euler.z -= .1
+        # elif event.type == 'LEFT_ARROW' and event.value == 'PRESS':
+        #     self.obj.rotation_euler.z += math.radians(90)
+        # elif event.type == 'RIGHT_ARROW' and event.value == 'PRESS':
+        #     self.obj.rotation_euler.z -= math.radians(90)                  
+        # else:
+        #     self.position_objects(selected_point)
 
         if event_is_place_asset(event):
             return self.finish(context)

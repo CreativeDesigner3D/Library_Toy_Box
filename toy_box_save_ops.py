@@ -109,9 +109,11 @@ class toy_box_OT_save_object_to_asset_library(bpy.types.Operator):
         save_script_path = create_object_save_script(directory_to_save_to, bpy.data.filepath, self.obj_name)
 
         # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
-
-        subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)   
-        subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+        tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+        save_command = [bpy.app.binary_path,"-b","--python",save_script_path]
+        
+        subprocess.call(tn_command)   
+        subprocess.call(save_command)
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
@@ -221,8 +223,11 @@ class toy_box_OT_save_collection_to_asset_library(bpy.types.Operator):
 
 #         subprocess.Popen(r'explorer ' + bpy.app.tempdir)
         
-        subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)
-        subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+        tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+        save_command = [bpy.app.binary_path,"-b","--python",save_script_path]
+
+        subprocess.call(tn_command)
+        subprocess.call(save_command)
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
@@ -345,9 +350,12 @@ class toy_box_OT_save_material_to_asset_library(bpy.types.Operator):
         save_script_path = self.create_material_save_script(directory_to_save_to, bpy.data.filepath, self.mat_name)
         
 #         subprocess.Popen(r'explorer ' + bpy.app.tempdir)
-        
-        subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)   
-        subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+
+        tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+        save_command = [bpy.app.binary_path,"-b","--python",save_script_path]        
+
+        subprocess.call(tn_command)   
+        subprocess.call(save_command)
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
@@ -449,8 +457,11 @@ class toy_box_OT_save_world_to_asset_library(bpy.types.Operator):
 
         # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
         
-        subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)   
-        subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+        tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+        save_command = [bpy.app.binary_path,"-b","--python",save_script_path]
+
+        subprocess.call(tn_command)   
+        subprocess.call(save_command)
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
@@ -567,8 +578,11 @@ class toy_box_OT_save_assembly_to_asset_library(bpy.types.Operator):
 
 #         subprocess.Popen(r'explorer ' + bpy.app.tempdir)
         
-        subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)
-        subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+        tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+        save_command = [bpy.app.binary_path,"-b","--python",save_script_path]
+
+        subprocess.call(tn_command)
+        subprocess.call(save_command)
         
         os.remove(thumbnail_script_path)
         os.remove(save_script_path)
@@ -651,10 +665,12 @@ class toy_box_OT_search_directory_to_save_to_object_library(bpy.types.Operator):
                 thumbnail_script_path = create_object_thumbnail_script(directory_to_save_to, obj.path, obj.name)
                 save_script_path = create_object_save_script(directory_to_save_to, obj.path, obj.name)
 
-            # # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
-            
-                subprocess.call(bpy.app.binary_path + ' "' + toy_box_utils.get_thumbnail_file_path() + '" -b --python "' + thumbnail_script_path + '"',shell=True)   
-                subprocess.call(bpy.app.binary_path + ' -b --python "' + save_script_path + '"',shell=True)
+                # subprocess.Popen(r'explorer ' + bpy.app.tempdir)
+                tn_command = [bpy.app.binary_path,toy_box_utils.get_thumbnail_file_path(),"-b","--python",thumbnail_script_path]
+                save_command = [bpy.app.binary_path,"-b","--python",save_script_path]
+
+                subprocess.call(tn_command)   
+                subprocess.call(save_command)
             
                 os.remove(thumbnail_script_path)
                 os.remove(save_script_path)
