@@ -43,6 +43,7 @@ class toy_box_OT_drop_object_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_object_from_library"
     bl_label = "Drop Object From Library"
     bl_description = "This drops an object from the library"
+    bl_options = {'UNDO'}
 
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
 
@@ -139,6 +140,7 @@ class toy_box_OT_drop_collection_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_collection_from_library"
     bl_label = "Drop Collection From Library"
     bl_description = "This drops a collection from the library"
+    bl_options = {'UNDO'}
     
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
 
@@ -248,6 +250,7 @@ class toy_box_OT_drop_material_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_material_from_library"
     bl_label = "Drop Material From Library"
     bl_description = "This drops a material from the library"
+    bl_options = {'UNDO'}
     
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
 
@@ -329,6 +332,7 @@ class toy_box_OT_drop_world_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_world_from_library"
     bl_label = "Drop World From Library"
     bl_description = "This drops a world from the library"
+    bl_options = {'UNDO'}
     
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
     
@@ -352,6 +356,7 @@ class toy_box_OT_drop_assembly_from_library(bpy.types.Operator):
     bl_idname = "toy_box.drop_assembly_from_library"
     bl_label = "Drop Assembly From Library"
     bl_description = "This drops an assembly from the library"
+    bl_options = {'UNDO'}
 
     filepath: bpy.props.StringProperty(name="Filepath",default="Error")
     
